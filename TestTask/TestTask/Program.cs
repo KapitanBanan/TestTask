@@ -120,9 +120,9 @@ namespace TestTask
             ThreadFileTree fileThread = new ThreadFileTree(sourse);
             ThreadFileHash hashThread = new ThreadFileHash(fileThread.Roll);
 
-            //BDInfo infoBD = new BDInfo();
+            BDInfo infoBD = new BDInfo();
 
-            //infoBD.AddInfoToBD(fileThread.Roll, hashThread.Roll);
+            infoBD.AddInfoToBD(fileThread.Roll, hashThread.Roll);
 
             Console.Read();
         }
