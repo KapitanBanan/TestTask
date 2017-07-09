@@ -99,8 +99,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BDInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThreadFileHash.cs" />
+    <Compile Include="ThreadFileTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

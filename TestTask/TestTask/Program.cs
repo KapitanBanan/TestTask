@@ -112,92 +112,18 @@ namespace TestTask
             }
         }
 
-        public class Use
-        {
-            Queue<string> queue = new Queue<string>();
-
-            long dlya;
-            static string g = null;
-            ArrayList roll = new ArrayList();
-            
-
-            public void InstanceMethod()
-            {
-                string[] dirs = Directory.GetFiles(@"E:\Exampl", "*");
-                
-                foreach (string dir in dirs)
-                {
-                    queue.Enqueue(dir);
-                }
-                dlya = queue.LongCount();
-            }
-
-            public void HashMethod()
-            {
-                Thread.Sleep(20);
-                while (!(queue.Count == 0))
-                {
-                    string obj = queue.Dequeue();
-                    g = ComputeMD5Checksum(obj);
-                    roll.Add(g);
-                }
-            }
-
-            public void Conclusion()
-            {
-                Thread.Sleep(1500);
-                Console.WriteLine(dlya - queue.Count + "/" + dlya);
-            }
-
-            public ArrayList Roll { get { return roll; } }
-            public int GetI { get { return i; } }
-
-            private string ComputeMD5Checksum(string path)
-            {
-                using (FileStream source = System.IO.File.OpenRead(path))
-                {
-                    MD5 md5 = new MD5CryptoServiceProvider();
-                    byte[] fileData = new byte[source.Length];
-                    source.Read(fileData, 0, (int)source.Length);
-                    byte[] hashSumm = md5.ComputeHash(fileData);
-                    string result = BitConverter.ToString(hashSumm).Replace("-", String.Empty);
-                    return result;
-                }
-            }
-        }
-
         static void Main(string[] args)
         {
-            Use use = new Use();
-            Thread first = new Thread(new ThreadStart(use.InstanceMethod));
-            Thread other = new Thread(new ThreadStart(use.HashMethod));
-            Thread other1 = new Thread(new ThreadStart(use.HashMethod));
-            Thread other2 = new Thread(new ThreadStart(use.HashMethod));
-            first.Start();
-            other.Start();
-            other1.Start();
-            other2.Start();
-            use.Conclusion();
+            Console.Write("Imput the sourse: ");
+            string sourse = Console.ReadLine();
 
-            Thread.Sleep(2000);
+            ThreadFileTree fileThread = new ThreadFileTree(sourse);
+            ThreadFileHash hashThread = new ThreadFileHash(fileThread.Roll);
 
-            ArrayList rollNew = new ArrayList();
-            rollNew = use.Roll;
-            string strConn = "Data Source=localhost;Initial Catalog=NewDataBase;Integrated Security=True;Pooling=False";
-            SqlConnection Conn = new SqlConnection(@strConn);
-            string sInsSql = (@"INSERT INTO Banan (ID, Result) " +  "VALUES (@number, @result)");
-            Conn.Open();
-            for (int i = 0; i < rollNew.Count; i++)
-            {
-                using (var command = new SqlCommand(sInsSql, Conn))
-                {
-                    command.Parameters.AddWithValue("@number", i+1);
-                    command.Parameters.AddWithValue("@result", rollNew[i]);
-                    command.ExecuteNonQuery();
-                    //Console.WriteLine("Add was successful" + (i + 1));
-                }
-            }
-            
+            //BDInfo infoBD = new BDInfo();
+
+            //infoBD.AddInfoToBD(fileThread.Roll, hashThread.Roll);
+
             Console.Read();
         }
 
