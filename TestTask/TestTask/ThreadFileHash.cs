@@ -47,7 +47,10 @@ namespace TestTask
                 while (!(queueNew.Count == 0))
                 {
                     string obj = queueNew.Dequeue();
-                    g = ComputeMD5Checksum(obj);
+                    try { g = ComputeMD5Checksum(obj); }
+                    catch (ArgumentNullException) { g = "Argument Null"; }
+                    catch (FileNotFoundException) { g = "FileNotFound"; }
+                    catch (UnauthorizedAccessException) { g = "AccessError"; }
                     result.Add(g);
                     Console.WriteLine(kol-queueNew.Count + "/" + kol);
                     //Console.WriteLine(g);
@@ -57,23 +60,16 @@ namespace TestTask
 
         private string ComputeMD5Checksum(string path)
         {
-            if (path.Equals("This element is NULL"))
+            using (FileStream source = File.OpenRead(path))
             {
-                return "This element is NULL";
+
+                MD5 md5 = new MD5CryptoServiceProvider();
+                byte[] fileData = new byte[source.Length];
+                source.Read(fileData, 0, (int)source.Length);
+                byte[] hashSumm = md5.ComputeHash(fileData);
+                string result = BitConverter.ToString(hashSumm).Replace("-", String.Empty);
+                return result;
             }
-            else
-            {
-                using (FileStream source = File.OpenRead(path))
-                {
-                    MD5 md5 = new MD5CryptoServiceProvider();
-                    byte[] fileData = new byte[source.Length];
-                    source.Read(fileData, 0, (int)source.Length);
-                    byte[] hashSumm = md5.ComputeHash(fileData);
-                    string result = BitConverter.ToString(hashSumm).Replace("-", String.Empty);
-                    return result;
-                }
-            }
-            
         }
 
         public List<string> Roll { get { return result; } }

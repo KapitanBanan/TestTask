@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TestTask
 {
-    class ThreadFileTree
+    public class ThreadFileTree
     {
         Thread thread;
         Queue<string> queue = new Queue<string>();
@@ -28,11 +28,7 @@ namespace TestTask
 
             foreach (string dir in soursesFile)
             {
-                if (dir == null)
-                {
-                    queue.Enqueue("This element is NULL");
-                }
-                else queue.Enqueue(dir);
+                queue.Enqueue(dir);
                 //Console.WriteLine(dir);
             }
 

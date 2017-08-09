@@ -15,19 +15,19 @@ namespace TestTask
                 " Catalog=NewDataBase;Integrated Security=True;Pooling=False";
             SqlConnection Conn = new SqlConnection(@strConn);
             string sInsSql = (@"INSERT INTO Banan (ID, FileSourse, Result) " + "VALUES (@number, @sourse, @result)");
-            Conn.Open();
-            for (int i = 0; i < result.Count; i++)
+            using (var command = new SqlCommand(sInsSql, Conn))
             {
-                using (var command = new SqlCommand(sInsSql, Conn))
+                Conn.Open();
+                for (int i = 0; i < result.Count; i++)
                 {
-                    command.Parameters.AddWithValue("@number", i + 1);
-                    command.Parameters.AddWithValue("@sourse", sourse.Dequeue());
-                    command.Parameters.AddWithValue("@result", result[i]);
-                    command.ExecuteNonQuery();
-                    //Console.WriteLine("Add was successful" + (i + 1));
+                        command.Parameters.AddWithValue("@number", i + 1);
+                        command.Parameters.AddWithValue("@sourse", sourse.Dequeue());
+                        command.Parameters.AddWithValue("@result", result[i]);
+                        command.ExecuteNonQuery();
+                        //Console.WriteLine("Add was successful" + (i + 1));
                 }
+                Conn.Close();
             }
-            Conn.Close();
         }
     }
 }
